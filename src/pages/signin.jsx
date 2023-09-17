@@ -15,6 +15,9 @@ export default function Signin() {
     setFormData((prevState) => ({...prevState,
       [e.target.id]: e.target.value}))
   }
+  function onSubmit(e){
+    e.preventDefault()
+  }
   return (
     <section>
       <h1 className='text-3xl text-center mt-6 font-bold'>Sign in</h1>
@@ -26,7 +29,7 @@ export default function Signin() {
           className='w-full rounded-2xl'/>
         </div>
         <div className='w-full md:w-[67%] lg:w-[40%] lg:ml-20'>
-          <form action="" >
+          <form onSubmit={onSubmit} >
             <input type="email" name="" id="email"
              value={email} onChange={onChange}
              placeholder='email address'
