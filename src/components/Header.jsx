@@ -1,10 +1,22 @@
-import React from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export default function Header() {
+  const [pageState, setPageState] = useState("Sign in");
     const location = useLocation();
     console.log(location.pathname);
     const navigate = useNavigate();
+    const auth = getAuth();
+    useEffect(()=>{
+      onAuthStateChanged(auth, (user)=>{
+        if(user){
+          setPageState("profile");
+      } else {
+        setPageState("Sign in");
+      } 
+      })
+    }, [auth]);
     function pathMatchRoute(route){
        if (route === location.pathname){
            return true
@@ -22,13 +34,19 @@ export default function Header() {
       <div>
         <ul className='flex space-x-10'>
             <li className={`cursor-pointer py-3 text-sm font-semibold 
-            text-gray-400  ${pathMatchRoute("/") && " border-b-[3px] text-black border-b-red-500"}`} onClick={()=>navigate("/")}>Home</li>
+            text-gray-400  ${pathMatchRoute("/") && " border-b-[3px] text-black border-b-red-500"}`} 
+              onClick={()=>navigate("/")}>Home</li>
             <li className={`cursor-pointer py-3 text-sm font-semibold 
             text-gray-400  
-            ${pathMatchRoute("/Offers") && "border-b-[3px] text-black border-b-red-500"}`} onClick={()=>navigate("/Offers")}>Offers</li>
+            ${pathMatchRoute("/Offers") && "border-b-[3px] text-black border-b-red-500"}`} 
+              onClick={()=>navigate("/Offers")}>Offers</li>
             <li className={`cursor-pointer py-3 text-sm font-semibold 
             text-gray-400   
-            ${pathMatchRoute("/sign-in") && "border-b-[3px] text-black border-b-red-500"}`} onClick={()=>navigate("/sign-in")}>sign in</li>
+            ${
+              (pathMatchRoute("/sign-in")||pathMatchRoute("/profile")) && "border-b-[3px] text-black border-b-red-500"}`} 
+              onClick={()=>navigate("/profile")}>
+                {pageState}
+                </li>
         </ul>
       </div>
 
