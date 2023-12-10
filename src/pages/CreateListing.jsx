@@ -2,7 +2,6 @@ import { type } from '@testing-library/user-event/dist/type'
 import React, { useState } from 'react'
 
 export default function CreateListing() {
-    function onChange(){}
     
     const [formData, setFormData] = useState({
         type: "rent",
@@ -30,6 +29,29 @@ export default function CreateListing() {
         regularPrice,
         discountedPrice
     } = formData;
+    function onChange(e){
+        let boolean = null;
+        if(e.target.value === "false"){
+            boolean = false;
+        }
+        if(e.target.value === "true"){
+            boolean = true;
+        }
+        //files
+        if(e.target.files){
+            setFormData((prevState)=>({
+                ...prevState,
+                images: e.target.files
+            }))
+        }
+        //for text/boolean/number
+        if(!e.target.files){
+            setFormData((prevState)=>({
+                ...prevState,
+                [e.target.id]: boolean ?? e.target.value,
+            }))
+        }
+    }
   return (
 
     <main className='max-w-md px-2 mx-auto'>
@@ -37,7 +59,7 @@ export default function CreateListing() {
       <form >
         <p className='text-lg mt-6 font-semibold'>Sell/rent</p>
         <div className='flex'>
-            <button type='button' id="type" value = "sale"
+            <button type='button' id="type" value = "sell"
             onClick={onChange}
             className={`mr-3 px-7 py-3 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg 
             first-letter:transition duration-150 w-full ${
@@ -82,7 +104,7 @@ export default function CreateListing() {
 
         <p className='text-lg mt-6 font-semibold'>Parking spot</p>
         <div className='flex'>
-            <button type='button' id="type" value = "sale"
+            <button type='button' id="parking" value = { false }
             onClick={onChange}
             className={`mr-3 px-7 py-3 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg 
             first-letter:transition duration-150 w-full ${
@@ -91,7 +113,7 @@ export default function CreateListing() {
                 no
             </button>
             <button type='button' 
-            id="Parking"
+            id="parking"
             value = {true}
             onClick={onChange}
             className={`mr-3 px-7 py-3 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg 
@@ -104,7 +126,7 @@ export default function CreateListing() {
 
         <p className='text-lg mt-6 font-semibold'>Furnished</p>
         <div className='flex'>
-            <button type='button' id="type" value = {furnished}
+            <button type='button' id="furnished" value = {false}
             onClick={onChange}
             className={`mr-3 px-7 py-3 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg 
             first-letter:transition duration-150 w-full ${
@@ -113,12 +135,12 @@ export default function CreateListing() {
                 no
             </button>
             <button type='button' 
-            id="Parking"
+            id="furnished"
             value = {true}
             onClick={onChange}
             className={`mr-3 px-7 py-3 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg 
             first-letter:transition duration-150 w-full ${
-                !parking ? "bg-white text-black": "bg-slate-600 text-white"
+                !furnished ? "bg-white text-black": "bg-slate-600 text-white"
                 }`}>
                 Yes
             </button>
